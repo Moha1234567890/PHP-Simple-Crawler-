@@ -21,10 +21,32 @@ $html = '' . $response->getBody();
 $crawler = new Crawler($html);
 
 
-$nodeValues = $crawler->filter('.ui-search-layout > li')->each(function (Crawler $node, $i) {
-   // echo $node->text();
+$items = $crawler->filter('.ui-search-layout > li')->each(function (Crawler $node, $i) {
+    $text = $node->text();
 
-    echo $node->filter('img')->attr('src');
-    echo '<br>';
+    $image = $node->filter('img')->attr('src');
+
+    $arr = [
+      "text" => $text,
+     "image" => $image
+    ];
+    return $arr;
+   
 });
 
+foreach($items as $item) {
+   // echo '<img src="'. $item['image']. '"/>';
+   // echo '<p>"' . $item['text']. '"</p>';
+}
+
+$file = fopen('images.csv', "w");
+
+foreach($items as $item) {
+   fputcsv($file, $item);
+   // echo '<img src="'. $item['image']. '"/>';
+   // echo '<p>"' . $item['text']. '"</p>';
+}
+
+fclose($file);
+
+echo "done";
